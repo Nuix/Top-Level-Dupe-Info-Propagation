@@ -1,5 +1,5 @@
-[PROJECT_NAME]
-==============
+Top Level Dupe Info Propagation
+===============================
 
 ![Last tested in Nuix 7.4](https://img.shields.io/badge/Nuix-7.4-green.svg)
 
