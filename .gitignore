@@ -4,7 +4,6 @@ Ignored
 # Java Project
 # ============
 
-*.jar
 *.jardesc
 /Java/Doc
 
