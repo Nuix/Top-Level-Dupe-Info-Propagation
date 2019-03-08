@@ -29,6 +29,13 @@ dupe_path_include_self_choices = {
 dialog = TabbedCustomDialog.new
 dialog.setTitle("Top Level Duplicate Info Propagation")
 main_tab = dialog.addTab("main_tab","Main")
+if !$current_selected_items.nil? && $current_selected_items.size > 0
+	case_top_level_items = $current_case.searchUnsorted("flag:top_level")
+	selected_top_level_items = $utilities.getItemUtility.intersection($current_selected_items,case_top_level_items)
+	main_tab.appendHeader("Using #{selected_top_level_items.size} top level selected items")
+else
+	main_tab.appendHeader("Using #{$current_case.count("flag:top_level")} top level case items")
+end
 main_tab.appendTextField("dupe_custodians_name","Dupe Custodians Field","Top Level Duplicate Custodian Set")
 main_tab.appendCheckBox("apply_dupe_custodians_tags","Apply Duplicate Custodians Tags",false)
 
