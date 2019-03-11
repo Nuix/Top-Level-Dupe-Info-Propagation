@@ -29,28 +29,43 @@ dupe_path_include_self_choices = {
 dialog = TabbedCustomDialog.new
 dialog.setTitle("Top Level Duplicate Info Propagation")
 main_tab = dialog.addTab("main_tab","Main")
-main_tab.appendTextField("dupe_custodians_name","Dupe Custodians Field","Top Level Duplicate Custodian Set")
-main_tab.appendCheckBox("apply_dupe_custodians_tags","Apply Duplicate Custodians Tags",false)
 
-main_tab.appendCheckBox("propagate_dupe_paths","Propagate Dupe Paths",false)
-main_tab.appendTextField("dupe_paths_name","Dupe Paths Field","Top Level Duplicate Paths")
-main_tab.appendComboBox("dupe_path_include_self","Dupe Path Type",dupe_path_include_self_choices.keys)
+if !$current_selected_items.nil? && $current_selected_items.size > 0
+	case_top_level_items = $current_case.searchUnsorted("flag:top_level")
+	selected_top_level_items = $utilities.getItemUtility.intersection($current_selected_items,case_top_level_items)
+	main_tab.appendHeader("Using #{selected_top_level_items.size} selected top level items")
+	main_tab.appendCheckBox("pull_in_selection_duplicates","Also Pull in Duplicates of Selected Top Level Items",true)
+else
+	main_tab.appendHeader("Using #{$current_case.count("flag:top_level")} top level case items")
+end
+main_tab.appendHeader(" ")
+
+main_tab.appendTextField("dupe_custodians_name","Duplicate Custodians Field","Top Level Duplicate Custodian Set")
+main_tab.appendCheckBox("apply_dupe_custodians_tags","Apply Duplicate Custodians Tags",false)
+main_tab.appendHeader(" ")
+
+# main_tab.appendCheckBox("propagate_dupe_paths","Propagate Dupe Paths",false)
+# main_tab.appendTextField("dupe_paths_name","Dupe Paths Field","Top Level Duplicate Paths")
+
+main_tab.appendCheckableTextField("propagate_dupe_paths",false,"dupe_paths_name","Top Level Duplicate Paths","Propagate Dupe Paths as")
+main_tab.appendComboBox("dupe_path_include_self","Duplicate Path Type",dupe_path_include_self_choices.keys)
 main_tab.enabledOnlyWhenChecked("dupe_paths_name","propagate_dupe_paths")
 main_tab.enabledOnlyWhenChecked("dupe_path_include_self","propagate_dupe_paths")
+main_tab.appendHeader(" ")
 
-main_tab.appendCheckBox("only_top_level_dupes","Dupes Must be Top Level Also",false)
+main_tab.appendCheckBox("only_top_level_dupes","Duplicates Must Also be Top Level",false)
 if !$current_selected_items.nil? && $current_selected_items.size > 0
-	main_tab.appendCheckBox("only_selected_duplicates","Only Duplicates in Selection",false)
+	main_tab.appendCheckBox("only_selected_duplicates","Duplicates Must Also be in Selection",false)
 end
-main_tab.appendComboBox("dupe_values_type","Dupe Values Type",values_choices)
+main_tab.appendComboBox("dupe_values_type","Duplicate Values Type",values_choices)
 
 dialog.validateBeforeClosing do |values|
 	if values["dupe_custodians_name"].empty?
-		CommonDialogs.showWarning("Please provide a value for 'Dupe Custodians Field'")
+		CommonDialogs.showWarning("Please provide a value for 'Duplicate Custodians Field'")
 		next false
 	end
 	if values["propagate_dupe_paths"] && values["dupe_paths_name"].empty?
-		CommonDialogs.showWarning("Please provide a value for 'Dupe Paths Field'")
+		CommonDialogs.showWarning("Please provide a value for 'Duplicate Paths Field'")
 		next false
 	end
 	next true
@@ -60,6 +75,8 @@ dialog.display
 if dialog.getDialogResult == true
 	values = dialog.toMap
 	batching_annotater = BatchingBulkAnnotater.new
+
+	pull_in_selection_duplicates = values["pull_in_selection_duplicates"]
 
 	only_selected_duplicates = values["only_selected_duplicates"]
 	dupe_custodians_name = values["dupe_custodians_name"]
@@ -83,6 +100,9 @@ if dialog.getDialogResult == true
 		if $window.respond_to?(:closeAllTabs)
 			$window.closeAllTabs
 		end
+
+		iutil = $utilities.getItemUtility
+
 		batching_annotater.progress_dialog = pd
 		pd.setTitle("Top Level Dupe Propagation")
 		pd.setSubProgressVisible(false)
@@ -96,15 +116,17 @@ if dialog.getDialogResult == true
 		if !$current_selected_items.nil? && $current_selected_items.size > 0
 			pd.logMessage "Using selected top level items..."
 			items = $current_selected_items.select{|i|i.isTopLevel}
+
+			pd.logMessage("Pulling in duplicates of selected top level items...")
+			if pull_in_selection_duplicates
+				items = iutil.findItemsAndDuplicates(items)
+			end
 		else
 			pd.logMessage "Using all top level items..."
 			items =  $current_case.search("flag:top_level")
 		end
 
 		pd.logMessage "Top Level Items: #{items.size}"
-
-		iutil = $utilities.getItemUtility
-		annotater = $utilities.getBulkAnnotater
 
 		include_self = (values["dupe_values_type"] == "Item and Duplicates Custodian Values")
 		dupe_custodian_cache = DupeInfoCache.new(only_top_level_dupes,include_self,dupe_path_include_self)

@@ -1,7 +1,7 @@
 Top Level Dupe Info Propagation
 ===============================
 
-![Last tested in Nuix 7.4](https://img.shields.io/badge/Nuix-7.4-green.svg)
+![This script was last tested in Nuix 7.8](https://img.shields.io/badge/Script%20Tested%20in%20Nuix-7.8-green.svg)
 
 View the GitHub project [here](https://github.com/Nuix/Top-Level-Dupe-Info-Propagation) or download the latest release [here](https://github.com/Nuix/Top-Level-Dupe-Info-Propagation/releases).
 
@@ -24,14 +24,22 @@ Begin by downloading the latest release of this code.  Extract the contents of t
 
 | Setting | Description |
 |---------|-------------|
-| **Dupe Custodians Field** | Name of the custom metadata field to which duplicate custodian information will be recorded. |
+| **Also Pull in Duplicates of Selected Top Level Items** | This setting only appears when items were selected before running the script.  When checked, duplicates of top level items in your selection will also be processed. The intent of this setting is after you process some data, you select the newly ingested items.  This setting then also includes duplicates of the newly ingested items to also be updated. |
+| **Duplicate Custodians Field** | Name of the custom metadata field to which duplicate custodian information will be recorded. |
 | **Apply Duplicate Custodians Tags** | When checked a tag will be applied to each item with a name corresponding to the duplicate custodians value. |
-| **Propagate Dupe Paths** | When checked a custom metadata field will be applied to items containing the item paths of the duplicate items. |
-| **Dupe Paths Field** | The field to record the duplicate paths value to when **Propagate Dupe Paths** is checked. |
-| **Dupe Path Type** | Determines duplicate paths will be calculated such that they contain the item and ancestor items' names or just the ancestor items' names. |
-| **Dupes Must be Top Level Also** | When checked, an item is only considered duplicate of a top level item if that item is itself also top level.  This prevents a top level item from being considered duplicate to the same email which is an attachment elsewhere. |
-| **Dupe Values Type** | Determines whether the duplicate custodians calculation for given item includes its own custodian or just the custodian of the other duplicate items.  Note that even when not including an item's own custodian in the calculation, it still may be in the calculated result if the custodian has other copies of the same item. |
-| **Only Duplicates in Selection** | *This choice only shows up if items were selected when the script was ran.*  When checked, only items within the selection of items are candidates for being considered being duplicates. |
+| **Propagate Dupe Paths as** | When checked a custom metadata field will be applied to items containing the item paths of the duplicate items. Use the associated text field to specify the field used to record the duplicate paths value to when **Propagate Dupe Paths as** is checked. |
+| **Duplicate Path Type** | Determines duplicate paths will be calculated such that they contain the item and ancestor items' names or just the ancestor items' names. |
+| **Duplicates Must Also be Top Level** | When checked, an item is only considered duplicate of a top level item if that item is itself also top level.  This prevents a top level item from being considered duplicate to the same email which is an attachment elsewhere. |
+| **Duplicates Must Also be in Selection | *This choice only shows up if items were selected when the script was ran.*  When checked, only items within the selection of items are candidates for being considered being duplicates. |
+| **Duplicate Values Type** | Determines whether the duplicate custodians calculation for given item includes its own custodian or just the custodian of the other duplicate items.  Note that even when not including an item's own custodian in the calculation, it still may be in the calculated result if the custodian has other copies of the same item. |
+
+# Cloning this Repository
+
+This script relies on code from [Nx](https://github.com/Nuix/Nx) to present a settings dialog and progress dialog.  This JAR file is not included in the repository (although it is included in release downloads).  If you clone this repository, you will also want to obtain a copy of Nx.jar by either:
+1. Building it from [the source](https://github.com/Nuix/Nx)
+2. Downloading an already built JAR file from the [Nx releases](https://github.com/Nuix/Nx/releases)
+
+Once you have a copy of Nx.jar, make sure to include it in the same directory as the script.
 
 # License
 
