@@ -4,8 +4,10 @@ Ignored
 # Java Project
 # ============
 
+*.jar
 *.jardesc
 /Java/Doc
+/Java/*.jardesc
 
 .settings
 .classpath
