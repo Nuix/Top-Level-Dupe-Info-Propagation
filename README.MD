@@ -30,7 +30,7 @@ Begin by downloading the latest release of this code.  Extract the contents of t
 | **Propagate Dupe Paths as** | When checked a custom metadata field will be applied to items containing the item paths of the duplicate items. Use the associated text field to specify the field used to record the duplicate paths value to when **Propagate Dupe Paths as** is checked. |
 | **Duplicate Path Type** | Determines duplicate paths will be calculated such that they contain the item and ancestor items' names or just the ancestor items' names. |
 | **Duplicates Must Also be Top Level** | When checked, an item is only considered duplicate of a top level item if that item is itself also top level.  This prevents a top level item from being considered duplicate to the same email which is an attachment elsewhere. |
-| **Duplicates Must Also be in Selection | *This choice only shows up if items were selected when the script was ran.*  When checked, only items within the selection of items are candidates for being considered being duplicates. |
+| **Duplicates Must Also be in Selection** | *This choice only shows up if items were selected when the script was ran.*  When checked, only items within the selection of items are candidates for being considered being duplicates. |
 | **Duplicate Values Type** | Determines whether the duplicate custodians calculation for given item includes its own custodian or just the custodian of the other duplicate items.  Note that even when not including an item's own custodian in the calculation, it still may be in the calculated result if the custodian has other copies of the same item. |
 
 # Cloning this Repository
