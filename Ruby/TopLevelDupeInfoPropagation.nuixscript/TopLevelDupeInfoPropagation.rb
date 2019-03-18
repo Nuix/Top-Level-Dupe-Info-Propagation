@@ -112,14 +112,17 @@ if dialog.getDialogResult == true
 		pd.logMessage("Dupe Path Field: #{dupe_paths_name}") if propagate_dupe_paths
 		pd.logMessage("Dupe Path Type: #{values["dupe_path_include_self"]}")
 
+		pd.setMainStatusAndLogIt("Resolving input items...")
+
 		items = nil
 		if !$current_selected_items.nil? && $current_selected_items.size > 0
 			pd.logMessage "Using selected top level items..."
 			items = $current_selected_items.select{|i|i.isTopLevel}
 
-			pd.logMessage("Pulling in duplicates of selected top level items...")
 			if pull_in_selection_duplicates
+				pd.logMessage("Pulling in duplicates of selected top level items...")
 				items = iutil.findItemsAndDuplicates(items)
+				items = items.select{|i|i.isTopLevel}
 			end
 		else
 			pd.logMessage "Using all top level items..."
