@@ -78,9 +78,17 @@ class BatchingBulkAnnotater
 
 	# Flushes all pending annotations out to items, good to call this when you're done using this class
 	# to make sure anything which did not trigger in a "flush" call gets annotated
-	def flush_all
+	def flush_all(pd=nil)
 		log("Applying all pending annotations...")
+		
+		index = 0
 		@pending_tagging.each do |tag,pending_items|
+			index += 1
+			if !pd.nil?
+				pd.setMainProgress(index,@pending_tagging.size)
+				pd.setSubStatus("#{index}/#{@pending_tagging.size}")
+				break if pd.abortWasRequested
+			end
 			if pending_items.size >= 1
 				log("Applying tag '#{tag}' to #{pending_items.size} items")
 				$utilities.getBulkAnnotater.addTag(tag,pending_items)
@@ -89,7 +97,15 @@ class BatchingBulkAnnotater
 		end
 
 		@pending_custom_metadata.each do |field_name,value_grouped|
+			break if !pd.nil? && pd.abortWasRequested
+			index = 0
 			value_grouped.each do |value,pending_items|
+				index += 1
+				if !pd.nil?
+					pd.setMainProgress(index,value_grouped.size)
+					pd.setSubStatus("#{index}/#{value_grouped.size}")
+					break if pd.abortWasRequested
+				end
 				if pending_items.size >= 1
 					log("Applying field '#{field_name}' to #{pending_items.size} items")
 					$utilities.getBulkAnnotater.putCustomMetadata(field_name,value,pending_items,nil)

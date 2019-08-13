@@ -42,6 +42,10 @@ main_tab.appendHeader(" ")
 
 main_tab.appendTextField("dupe_custodians_name","Duplicate Custodians Field","Top Level Duplicate Custodian Set")
 main_tab.appendCheckBox("apply_dupe_custodians_tags","Apply Duplicate Custodians Tags",false)
+main_tab.appendRadioButton("tag_per_custodian","Tag per Custodian","tagging_type",true)
+main_tab.appendRadioButton("tag_concat_custodian","Tag Concatenation of Custodians","tagging_type",false)
+main_tab.enabledOnlyWhenChecked("tag_per_custodian","apply_dupe_custodians_tags")
+main_tab.enabledOnlyWhenChecked("tag_concat_custodian","apply_dupe_custodians_tags")
 main_tab.appendHeader(" ")
 
 # main_tab.appendCheckBox("propagate_dupe_paths","Propagate Dupe Paths",false)
@@ -94,6 +98,7 @@ if dialog.getDialogResult == true
 	only_top_level_dupes = values["only_top_level_dupes"]
 
 	apply_dupe_custodians_tags = values["apply_dupe_custodians_tags"]
+	tag_per_custodian = values["tag_per_custodian"]
 
 	# Work done inside this block will have access to the progress dialog
 	ProgressDialog.forBlock do |pd|
@@ -155,10 +160,17 @@ if dialog.getDialogResult == true
 
 			# Enqueue tag for duplicate custodians value, if were applying tags
 			if apply_dupe_custodians_tags
-				dupe_custodians_joined = dupe_custodians.join("; ")
-				if !dupe_custodians_joined.strip.empty?
-					tag = "#{dupe_custodians_name}|#{dupe_custodians_joined}"
-					batching_annotater.enqueue_tag(tag,descendants)
+				if tag_per_custodian
+					dupe_custodians.each do |dupe_custodian|
+						tag = "#{dupe_custodians_name}|#{dupe_custodian}"
+						batching_annotater.enqueue_tag(tag,descendants)
+					end
+				else
+					dupe_custodians_joined = dupe_custodians.join("; ")
+					if !dupe_custodians_joined.strip.empty?
+						tag = "#{dupe_custodians_name}|#{dupe_custodians_joined}"
+						batching_annotater.enqueue_tag(tag,descendants)
+					end
 				end
 			end
 
@@ -177,7 +189,7 @@ if dialog.getDialogResult == true
 		end
 
 		# Ensure we flush any remaining pending annotations
-		batching_annotater.flush_all
+		batching_annotater.flush_all(pd)
 
 		pd.logMessage "#{items.size}/#{items.size} : (Cache Hits #{dupe_custodian_cache.cache_hits}/#{items.size})"
 		pd.setMainProgress(items.size)
