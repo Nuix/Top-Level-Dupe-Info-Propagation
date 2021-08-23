@@ -121,13 +121,14 @@ if dialog.getDialogResult == true
 
 		items = nil
 		if !$current_selected_items.nil? && $current_selected_items.size > 0
+			all_top_level_items = $current_case.searchUnsorted("flag:top_level")
 			pd.logMessage "Using selected top level items..."
-			items = $current_selected_items.select{|i|i.isTopLevel}
+			items = iutil.intersection($current_selected_items,all_top_level_items)
 
 			if pull_in_selection_duplicates
 				pd.logMessage("Pulling in duplicates of selected top level items...")
 				items = iutil.findItemsAndDuplicates(items)
-				items = items.select{|i|i.isTopLevel}
+				items = iutil.intersection(items,all_top_level_items)
 			end
 		else
 			pd.logMessage "Using all top level items..."
