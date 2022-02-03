@@ -163,8 +163,10 @@ if dialog.getDialogResult == true
 			if apply_dupe_custodians_tags
 				if tag_per_custodian
 					dupe_custodians.each do |dupe_custodian|
-						tag = "#{dupe_custodians_name}|#{dupe_custodian}"
-						batching_annotater.enqueue_tag(tag,descendants)
+						if !dupe_custodian.strip.empty?
+							tag = "#{dupe_custodians_name}|#{dupe_custodian}"
+							batching_annotater.enqueue_tag(tag,descendants)
+						end
 					end
 				else
 					dupe_custodians_joined = dupe_custodians.join("; ")
