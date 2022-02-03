@@ -1,7 +1,7 @@
 Top Level Dupe Info Propagation
 ===============================
 
-![This script was last tested in Nuix 7.8](https://img.shields.io/badge/Script%20Tested%20in%20Nuix-7.8-green.svg)
+![This script was last tested in Nuix 9.6](https://img.shields.io/badge/Script%20Tested%20in%20Nuix-9.6-green.svg)
 
 View the GitHub project [here](https://github.com/Nuix/Top-Level-Dupe-Info-Propagation) or download the latest release [here](https://github.com/Nuix/Top-Level-Dupe-Info-Propagation/releases).
 
@@ -33,6 +33,22 @@ Begin by downloading the latest release of this code.  Extract the contents of t
 | **Duplicates Must Also be in Selection** | *This choice only shows up if items were selected when the script was ran.*  When checked, only items within the selection of items are candidates for being considered being duplicates. |
 | **Duplicate Values Type** | Determines whether the duplicate custodians calculation for given item includes its own custodian or just the custodian of the other duplicate items.  Note that even when not including an item's own custodian in the calculation, it still may be in the calculated result if the custodian has other copies of the same item. |
 
+To help clarify the **Duplicate Values Type**, lets imagine we have some data with 3 custodians: **Aly**, **Bob** and **Carl**.  Now imagine all 3 have a copy of a file.  If you had selected **Duplicates Custodian Values** then you might see the following duplicate custodians values recorded:
+
+- For the **Aly** copy: **Bob**, **Carl**
+- For the **Bob** copy: **Aly**, **Carl**
+- For the **Carl** copy: **Aly**, **Bob**
+
+Notice how each is reported from the perspective of the custodian as who the *other* custodians are.  Alternatively, if you were to instead choose **Item and Duplicates Custodian Values** you might instead see:
+
+- For the **Aly** copy: **Aly**, **Bob**, **Carl**
+- For the **Bob** copy: **Aly**, **Bob**, **Carl**
+- For the **Carl** copy: **Aly**, **Bob**, **Carl**
+
+Notice how now each is reported instead as *all* of the custodian with a copy.
+
+Sometimes this is referred to as **Other Custodians** vs **All Custodians**.  The **All Custodians** (**Item and Duplicates Custodian Values**) approach generally requires fewer calculations by the script and therefore tends to perform better.  If the **Item and Duplicates Custodian Values** setting yields values you can use, I would recommend you use that.
+
 # Cloning this Repository
 
 This script relies on code from [Nx](https://github.com/Nuix/Nx) to present a settings dialog and progress dialog.  This JAR file is not included in the repository (although it is included in release downloads).  If you clone this repository, you will also want to obtain a copy of Nx.jar by either:
@@ -44,7 +60,7 @@ Once you have a copy of Nx.jar, make sure to include it in the same directory as
 # License
 
 ```
-Copyright 2018 Nuix
+Copyright 2022 Nuix
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
