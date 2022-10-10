@@ -33,6 +33,8 @@ Begin by downloading the latest release of this code.  Extract the contents of t
 | **Duplicates Must Also be in Selection** | *This choice only shows up if items were selected when the script was ran.*  When checked, only items within the selection of items are candidates for being considered being duplicates. |
 | **Duplicate Values Type** | Determines whether the duplicate custodians calculation for given item includes its own custodian or just the custodian of the other duplicate items.  Note that even when not including an item's own custodian in the calculation, it still may be in the calculated result if the custodian has other copies of the same item. |
 
+### Duplicate Values Type
+
 To help clarify the **Duplicate Values Type**, lets imagine we have some data with 3 custodians: **Aly**, **Bob** and **Carl**.  Now imagine all 3 have a copy of a file.  If you had selected **Duplicates Custodian Values** then you might see the following duplicate custodians values recorded:
 
 - For the **Aly** copy: **Bob**, **Carl**
